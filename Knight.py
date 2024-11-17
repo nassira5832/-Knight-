@@ -64,8 +64,18 @@ class  Knight :
              dx, dy=(-2, -1)
          self.position = (self.position[0] - dx, self.position[1] - dy)
          self.path.pop()
-    def check_moves ( ):
+
+    def check_moves (self):
+        if not (0<= self.position[0] <8 and 0<=self.position[1]<8):
+            self.move_backward(self.chromosome.genes[-1])
+        else :
+            if (self.position in self.path):
+                self.move_backward(self.chromosome.genes[-1])
         
+
+            
+
+
 
 
 
