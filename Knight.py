@@ -66,11 +66,30 @@ class  Knight :
          self.path.pop()
 
     def check_moves (self):
+        
         if not (0<= self.position[0] <8 and 0<=self.position[1]<8):
             self.move_backward(self.chromosome.genes[-1])
+            if random.choice([True, False]):  
+              cycle = [, 6, 7, 8, 1, 2, 3]  
+            else:
+              cycle = [3, 2, 1, 8, 7, 6, 5]  
+
         else :
             if (self.position in self.path):
                 self.move_backward(self.chromosome.genes[-1])
+        
+        if random.choice([True, False]):  
+          cycle = [5, 6, 7, 8, 1, 2, 3]  
+        else:
+          cycle = [3, 2, 1, 8, 7, 6, 5]  
+
+        for move in cycle:
+          if self.is_move_legal(move):  
+             self.move_forward(move) 
+             break 
+          else:
+             self.move_backward(move) 
+        
         
 
             
