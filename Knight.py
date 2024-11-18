@@ -137,3 +137,28 @@ class  Knight :
      if fitness == 64:
         return 64
      return fitness
+
+
+class Population: 
+    def __init__(self , population_size):
+        self.population_size=population_size
+        self.generation=1
+        self. knights=[]
+        for i in range(self.population_size):
+            knight = Knight()  
+            self.knights.append(knight)  
+    def check_population(self):
+        for i in self.knights : 
+            i.check_moves()
+    def evaluate(self):
+        best_knight = None
+        best_fitness = -1  
+        for knight in self.knights:
+            fitness = knight.evaluate_fitness()  
+            if fitness > best_fitness:
+                best_fitness = fitness
+                best_knight = knight
+        return best_knight, best_fitness
+            
+        
+        
