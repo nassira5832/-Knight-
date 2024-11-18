@@ -125,3 +125,15 @@ class  Knight :
           return [6, 5, 4, 3, 2, 1, 8]
       elif direction == 8:
           return [7, 6, 5, 4, 3, 2, 1]
+      
+    def evaluate_fitness(self):
+     fitness = 0
+     visited_positions = set()
+     for position in self.path:
+        if not (0 <= position[0] < 8 and 0 <= position[1] < 8) or position in visited_positions:
+            break
+        visited_positions.add(position)
+        fitness += 1
+     if fitness == 64:
+        return 64
+     return fitness
