@@ -64,39 +64,64 @@ class  Knight :
              dx, dy=(-2, -1)
          self.position = (self.position[0] - dx, self.position[1] - dy)
          self.path.pop()
+ 
 
-    def check_moves (self):
-        
-        if not (0<= self.position[0] <8 and 0<=self.position[1]<8):
-            self.move_backward(self.chromosome.genes[-1])
-            if random.choice([True, False]):  
-              cycle = [, 6, 7, 8, 1, 2, 3]  
-            else:
-              cycle = [3, 2, 1, 8, 7, 6, 5]  
+    def check_moves(self):
+   
+      for i in range(len(self.chromosome.genes)):
+          direction = self.chromosome.genes[i]
+          self.move_forward(direction)
 
-        else :
-            if (self.position in self.path):
-                self.move_backward(self.chromosome.genes[-1])
-        
-        if random.choice([True, False]):  
-          cycle = [5, 6, 7, 8, 1, 2, 3]  
-        else:
-          cycle = [3, 2, 1, 8, 7, 6, 5]  
+          if self.position[0] < 0 or self.position[0] >= 8 or self.position[1] < 0 or self.position[1] >= 8 or self.position in self.path:
+             self.move_backward(direction)
+             if random.choice([True, False]): 
+                 cycle = self.get_forward_cycle(direction)
+             else: 
+                cycle = self.get_backward_cycle(direction)
 
-        for move in cycle:
-          if self.is_move_legal(move):  
-             self.move_forward(move) 
-             break 
-          else:
-             self.move_backward(move) 
-        
-        
+             for t in cycle:
+                self.move_forward(t)
+                if self.position[0] >= 0 and self.position[0] < 8 and self.position[1] >= 0 and self.position[1] < 8 and self.position not in self.path:
+                    self.chromosome.genes[i] = t
+                    break
+                else:
+                    self.move_backward(t)
+                    
+             if self.position[0] < 0 or self.position[0] >= 8 or self.position[1] < 0 or self.position[1] >= 8 or self.position in self.path:
+                self.chromosome.genes[i] = direction  
 
-            
+    def get_forward_cycle(self, direction):
+      if direction == 1:
+          return [2, 3, 4, 5, 6, 7, 8]
+      elif direction == 2:
+          return [3, 4, 5, 6, 7, 8, 1]
+      elif direction == 3:
+          return [4, 5, 6, 7, 8, 1, 2]
+      elif direction == 4:
+          return [5, 6, 7, 8, 1, 2, 3]
+      elif direction == 5:
+          return [6, 7, 8, 1, 2, 3, 4]
+      elif direction == 6:
+          return [7, 8, 1, 2, 3, 4, 5]
+      elif direction == 7:
+        return [8, 1, 2, 3, 4, 5, 6]
+      elif direction == 8:
+        return [1, 2, 3, 4, 5, 6, 7]
 
-
-
-
-
-        
-    
+    def get_backward_cycle(self, direction):
+      if direction == 1:
+          return [8, 7, 6, 5, 4, 3, 2]
+      elif direction == 2:
+          return [1, 8, 7, 6, 5, 4, 3]
+      elif direction == 3:
+          return [2, 1, 8, 7, 6, 5, 4]
+      elif direction == 4:
+          return [3, 2, 1, 8, 7, 6, 5]
+      elif direction == 5:
+          return [4, 3, 2, 1, 8, 7, 6]
+      elif direction == 6:
+          return [5, 4, 3, 2, 1, 8, 7]
+      elif direction == 7:
+          return [6, 5, 4, 3, 2, 1, 8]
+      elif direction == 8:
+          return [7, 6, 5, 4, 3, 2, 1]
