@@ -178,7 +178,7 @@ class Population:
         offspring2 = Knight(offspring2_chromosome)
         
         new_knights.append(offspring1)
-        if len(new_knights) < self.population_size:  # Vérifie la taille avant d'ajouter le deuxième descendant
+        if len(new_knights) < self.population_size:  
             new_knights.append(offspring2)
       self.knights = new_knights
       self.generation += 1 
