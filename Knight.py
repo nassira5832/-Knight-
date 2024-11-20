@@ -11,7 +11,7 @@ class  Chromosome :
         p2 = partner.genes[crossover_point:]
         P = p1 + p2
         return Chromosome(P)
-    def mutation (self, mutation_rate):
+    def mutation (self, mutation_rate=0.01):
         for i in len(self.genes):
             if (random.random()<mutation_rate):
                 self.genes[i] = random.randint(0, 7)
@@ -45,7 +45,6 @@ class  Knight :
         return new_position
     
     def move_backward (self,direction):
-         
          if (direction==1):
              dx, dy=(-2, +1)
          if (direction==2):
@@ -71,7 +70,6 @@ class  Knight :
       for i in range(len(self.chromosome.genes)):
           direction = self.chromosome.genes[i]
           self.move_forward(direction)
-
           if self.position[0] < 0 or self.position[0] >= 8 or self.position[1] < 0 or self.position[1] >= 8 or self.position in self.path:
              self.move_backward(direction)
              if random.choice([True, False]): 
@@ -86,10 +84,9 @@ class  Knight :
                     break
                 else:
                     self.move_backward(t)
-                    
              if self.position[0] < 0 or self.position[0] >= 8 or self.position[1] < 0 or self.position[1] >= 8 or self.position in self.path:
-                self.chromosome.genes[i] = direction  
-
+                 break
+                
     def get_forward_cycle(self, direction):
       if direction == 1:
           return [2, 3, 4, 5, 6, 7, 8]
@@ -125,7 +122,7 @@ class  Knight :
           return [6, 5, 4, 3, 2, 1, 8]
       elif direction == 8:
           return [7, 6, 5, 4, 3, 2, 1]
-      
+          
     def evaluate_fitness(self):
      fitness = 0
      visited_positions = set()
@@ -134,8 +131,6 @@ class  Knight :
             break
         visited_positions.add(position)
         fitness += 1
-     if fitness == 64:
-        return 64
      return fitness
 
 
@@ -159,6 +154,42 @@ class Population:
                 best_fitness = fitness
                 best_knight = knight
         return best_knight, best_fitness
-            
+
+    def tournament_selection(self , size=3):
+        T = random.sample(self.knights, size)
+        T_fitness=[]
+        for i in range(len(T)) : 
+            T_fitness.append(T[i].fitness)
+        T_fitness_tries = sorted(T_fitness)
+        parent1=T_fitness_tries[size]
+        parent2=T_fitness_tries[size-1]
+        return parent1 , parent2
+
+    def create_new_generation(self):
+      new_knights = []  
+      while len(new_knights) < self.population_size:
+        parent1, parent2 = self.tournament_selection()  
+        offspring1_chromosome = parent1.chromosome.crossover(parent2.chromosome)
+        offspring2_chromosome = parent2.chromosome.crossover(parent1.chromosome)
+        offspring1_chromosome.mutation()
+        offspring2_chromosome.mutation()
+    
+        offspring1 = Knight(offspring1_chromosome)
+        offspring2 = Knight(offspring2_chromosome)
+        
+        new_knights.append(offspring1)
+        if len(new_knights) < self.population_size:  # Vérifie la taille avant d'ajouter le deuxième descendant
+            new_knights.append(offspring2)
+      self.knights = new_knights
+      self.generation += 1 
+
+
+    
+
+    
         
         
+             
+
+    
+
